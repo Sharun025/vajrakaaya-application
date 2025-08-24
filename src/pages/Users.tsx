@@ -1,0 +1,322 @@
+import React, { useState } from 'react';
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Typography,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  MenuItem,
+  Grid,
+  Chip,
+  Avatar,
+  IconButton,
+} from '@mui/material';
+import {
+  Add as AddIcon,
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  Visibility as ViewIcon,
+} from '@mui/icons-material';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { useAppStore } from '../store';
+import { User } from '../types';
+
+const Users: React.FC = () => {
+  const { users, addUser, updateUser, deleteUser } = useAppStore();
+  const [openDialog, setOpenDialog] = useState(false);
+  const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [formData, setFormData] = useState<Partial<User>>({
+    name: '',
+    email: '',
+    role: 'worker',
+    department: '',
+    phone: '',
+    avatar: '',
+  });
+
+  const handleOpenDialog = (user?: User) => {
+    if (user) {
+      setEditingUser(user);
+      setFormData(user);
+    } else {
+      setEditingUser(null);
+      setFormData({
+        name: '',
+        email: '',
+        role: 'worker',
+        department: '',
+        phone: '',
+        avatar: '',
+      });
+    }
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    setEditingUser(null);
+  };
+
+  const handleSubmit = () => {
+    if (editingUser) {
+      updateUser(editingUser.id, formData);
+    } else {
+      const newUser: User = {
+        ...formData as User,
+        id: Date.now().toString(),
+      };
+      addUser(newUser);
+    }
+    handleCloseDialog();
+  };
+
+  const handleDelete = (id: string) => {
+    if (window.confirm('Are you sure you want to delete this user?')) {
+      deleteUser(id);
+    }
+  };
+
+  const columns: GridColDef[] = [
+    {
+      field: 'avatar',
+      headerName: 'Avatar',
+      width: 80,
+      renderCell: (params) => (
+        <Avatar sx={{ width: 40, height: 40, bgcolor: 'primary.main' }}>
+          {params.value ? (
+            <img src={params.value} alt="Avatar" style={{ width: '100%', height: '100%' }} />
+          ) : (
+            params.row.name?.charAt(0)?.toUpperCase() || 'U'
+          )}
+        </Avatar>
+      ),
+    },
+    { field: 'name', headerName: 'Name', width: 200, flex: 1 },
+    { field: 'email', headerName: 'Email', width: 200 },
+    {
+      field: 'role',
+      headerName: 'Role',
+      width: 120,
+      renderCell: (params) => (
+        <Chip
+          label={params.value}
+          size="small"
+          color={
+            params.value === 'admin' ? 'error' :
+            params.value === 'manager' ? 'warning' :
+            params.value === 'supervisor' ? 'info' : 'default'
+          }
+        />
+      ),
+    },
+    { field: 'department', headerName: 'Department', width: 150 },
+    { field: 'phone', headerName: 'Phone', width: 130 },
+    {
+      field: 'actions',
+      headerName: 'Actions',
+      width: 120,
+      sortable: false,
+      filterable: false,
+      renderCell: (params: any) => (
+        <Box sx={{ display: 'flex', gap: 1 }}>
+          <IconButton
+            size="small"
+            onClick={() => handleOpenDialog(params.row)}
+            color="primary"
+          >
+            <ViewIcon />
+          </IconButton>
+          <IconButton
+            size="small"
+            onClick={() => handleOpenDialog(params.row)}
+            color="primary"
+          >
+            <EditIcon />
+          </IconButton>
+          <IconButton
+            size="small"
+            onClick={() => handleDelete(params.id as string)}
+            color="error"
+          >
+            <DeleteIcon />
+          </IconButton>
+        </Box>
+      ),
+    },
+  ];
+
+  const roleCounts = {
+    admin: users.filter(u => u.role === 'admin').length,
+    manager: users.filter(u => u.role === 'manager').length,
+    supervisor: users.filter(u => u.role === 'supervisor').length,
+    worker: users.filter(u => u.role === 'worker').length,
+  };
+
+  return (
+    <Box>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+        <Typography variant="h4">User Management</Typography>
+        <Button
+          variant="contained"
+          startIcon={<AddIcon />}
+          onClick={() => handleOpenDialog()}
+        >
+          Add User
+        </Button>
+      </Box>
+
+      {/* Summary Cards */}
+      <Grid container spacing={3} sx={{ mb: 3 }}>
+        <Grid item xs={12} sm={6} md={3}>
+          <Card>
+            <CardContent>
+              <Typography color="textSecondary" gutterBottom>
+                Total Users
+              </Typography>
+              <Typography variant="h4">
+                {users.length}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <Card>
+            <CardContent>
+              <Typography color="textSecondary" gutterBottom>
+                Administrators
+              </Typography>
+              <Typography variant="h4">
+                {roleCounts.admin}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <Card>
+            <CardContent>
+              <Typography color="textSecondary" gutterBottom>
+                Managers
+              </Typography>
+              <Typography variant="h4">
+                {roleCounts.manager}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <Card>
+            <CardContent>
+              <Typography color="textSecondary" gutterBottom>
+                Workers
+              </Typography>
+              <Typography variant="h4">
+                {roleCounts.worker + roleCounts.supervisor}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+
+      <Card>
+        <CardContent>
+          <DataGrid
+            rows={users}
+            columns={columns}
+            pageSize={10}
+            rowsPerPageOptions={[10, 25, 50]}
+            disableSelectionOnClick
+            autoHeight
+            sx={{
+              '& .MuiDataGrid-cell': {
+                borderBottom: '1px solid #333',
+              },
+              '& .MuiDataGrid-columnHeaders': {
+                backgroundColor: '#2a2a2a',
+                borderBottom: '2px solid #333',
+              },
+            }}
+          />
+        </CardContent>
+      </Card>
+
+      <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="md" fullWidth>
+        <DialogTitle>
+          {editingUser ? 'Edit User' : 'Add New User'}
+        </DialogTitle>
+        <DialogContent>
+          <Grid container spacing={2} sx={{ mt: 1 }}>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                label="Full Name"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                type="email"
+                label="Email"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                select
+                label="Role"
+                value={formData.role}
+                onChange={(e) => setFormData({ ...formData, role: e.target.value as User['role'] })}
+              >
+                <MenuItem value="admin">Administrator</MenuItem>
+                <MenuItem value="manager">Manager</MenuItem>
+                <MenuItem value="supervisor">Supervisor</MenuItem>
+                <MenuItem value="worker">Worker</MenuItem>
+              </TextField>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                label="Department"
+                value={formData.department}
+                onChange={(e) => setFormData({ ...formData, department: e.target.value })}
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                label="Phone Number"
+                value={formData.phone}
+                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                label="Avatar URL (Optional)"
+                value={formData.avatar || ''}
+                onChange={(e) => setFormData({ ...formData, avatar: e.target.value })}
+                placeholder="https://example.com/avatar.jpg"
+              />
+            </Grid>
+          </Grid>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog}>Cancel</Button>
+          <Button onClick={handleSubmit} variant="contained">
+            {editingUser ? 'Update' : 'Create'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Box>
+  );
+};
+
+export default Users;
