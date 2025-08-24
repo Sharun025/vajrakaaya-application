@@ -51,8 +51,8 @@ A comprehensive web-based project management system built with React, TypeScript
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
-cd vajrakaaya-app
+git clone https://github.com/Sharun025/vajrakaaya-application.git
+cd vajrakaaya-application
 ```
 
 2. Install dependencies:
@@ -138,6 +138,32 @@ The application includes comprehensive data models for:
 - **Materials**: Stock levels, pricing, suppliers, expiry dates
 - **Expenses**: Amount, category, approval status, payment method
 - **Users**: Roles, departments, contact information
+
+## Deployment
+
+### Hostinger Deployment
+
+This application is configured for easy deployment on Hostinger. Two methods are available:
+
+#### Method 1: Node.js Hosting (Recommended)
+1. In Hostinger Control Panel, go to "Websites" → "Manage"
+2. Click "Git" tab → "Connect Git Repository"
+3. Enter repository URL: `https://github.com/Sharun025/vajrakaaya-application.git`
+4. Choose branch: `master` or `main`
+5. Configure Node.js in "Advanced" → "Node.js"
+6. Set startup file to: `server.js`
+
+#### Method 2: Static Hosting
+1. Build the application: `npm run build`
+2. Upload the `build` folder contents to `/public_html`
+3. The `.htaccess` file is already configured for React Router
+
+For detailed deployment instructions, see [hostinger-deployment.md](hostinger-deployment.md)
+
+### Other Platforms
+- **Vercel**: `vercel --prod`
+- **Netlify**: Drag and drop the `build` folder
+- **GitHub Pages**: Enable in repository settings
 
 ## Contributing
 
