@@ -108,13 +108,13 @@ const Materials: React.FC = () => {
   };
 
   const columns: GridColDef[] = [
-    { field: 'name', headerName: 'Material Name', width: 200, flex: 1 },
-    { field: 'category', headerName: 'Category', width: 120 },
-    { field: 'unit', headerName: 'Unit', width: 80 },
+    { field: 'name', headerName: 'Material Name', width: 300, flex: 1 },
+    { field: 'category', headerName: 'Category', width: 180 },
+    { field: 'unit', headerName: 'Unit', width: 120 },
     {
       field: 'currentStock',
       headerName: 'Current Stock',
-      width: 120,
+      width: 150,
       renderCell: (params) => {
         const material = params.row;
         const stockStatus = getStockStatus(material);
@@ -130,27 +130,27 @@ const Materials: React.FC = () => {
         );
       },
     },
-    { field: 'minimumStock', headerName: 'Min Stock', width: 100 },
-    { field: 'maximumStock', headerName: 'Max Stock', width: 100 },
+    { field: 'minimumStock', headerName: 'Min Stock', width: 130 },
+    { field: 'maximumStock', headerName: 'Max Stock', width: 130 },
     {
       field: 'unitPrice',
       headerName: 'Unit Price',
-      width: 120,
+      width: 150,
       valueFormatter: (params) => `$${params.value.toFixed(2)}`,
     },
     {
       field: 'totalValue',
       headerName: 'Total Value',
-      width: 120,
+      width: 150,
       valueGetter: (params) => params.row.currentStock * params.row.unitPrice,
       valueFormatter: (params) => `$${params.value.toFixed(2)}`,
     },
-    { field: 'supplier', headerName: 'Supplier', width: 150 },
-    { field: 'location', headerName: 'Location', width: 120 },
+    { field: 'supplier', headerName: 'Supplier', width: 200 },
+    { field: 'location', headerName: 'Location', width: 150 },
     {
       field: 'status',
       headerName: 'Status',
-      width: 120,
+      width: 150,
       renderCell: (params) => {
         const stockStatus = getStockStatus(params.row);
         return (
@@ -165,19 +165,19 @@ const Materials: React.FC = () => {
     {
       field: 'lastUpdated',
       headerName: 'Last Updated',
-      width: 120,
+      width: 150,
       valueFormatter: (params) => new Date(params.value).toLocaleDateString(),
     },
     {
       field: 'expiryDate',
       headerName: 'Expiry Date',
-      width: 120,
+      width: 150,
       valueFormatter: (params) => params.value ? new Date(params.value).toLocaleDateString() : 'N/A',
     },
     {
       field: 'actions',
       headerName: 'Actions',
-      width: 120,
+      width: 180,
       sortable: false,
       filterable: false,
       renderCell: (params: any) => (

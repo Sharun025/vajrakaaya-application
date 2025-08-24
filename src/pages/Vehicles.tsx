@@ -96,14 +96,14 @@ const Vehicles: React.FC = () => {
   };
 
   const columns: GridColDef[] = [
-    { field: 'name', headerName: 'Vehicle Name', width: 150, flex: 1 },
-    { field: 'type', headerName: 'Type', width: 120 },
-    { field: 'model', headerName: 'Model', width: 120 },
-    { field: 'licensePlate', headerName: 'License Plate', width: 130 },
+    { field: 'name', headerName: 'Vehicle Name', width: 250, flex: 1 },
+    { field: 'type', headerName: 'Type', width: 150 },
+    { field: 'model', headerName: 'Model', width: 180 },
+    { field: 'licensePlate', headerName: 'License Plate', width: 180 },
     {
       field: 'status',
       headerName: 'Status',
-      width: 120,
+      width: 150,
       renderCell: (params) => (
         <Chip
           label={params.value}
@@ -116,11 +116,11 @@ const Vehicles: React.FC = () => {
         />
       ),
     },
-    { field: 'currentLocation', headerName: 'Location', width: 150 },
+    { field: 'currentLocation', headerName: 'Location', width: 200 },
     {
       field: 'assignedProject',
       headerName: 'Assigned Project',
-      width: 150,
+      width: 250,
       valueGetter: (params) => {
         const project = projects.find(p => p.id === params.value);
         return project?.name || 'Not Assigned';
@@ -129,7 +129,7 @@ const Vehicles: React.FC = () => {
     {
       field: 'fuelLevel',
       headerName: 'Fuel Level',
-      width: 100,
+      width: 150,
       renderCell: (params) => (
         <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
           <Box sx={{ flexGrow: 1, mr: 1 }}>
@@ -158,19 +158,19 @@ const Vehicles: React.FC = () => {
     {
       field: 'mileage',
       headerName: 'Mileage',
-      width: 100,
+      width: 150,
       valueFormatter: (params) => `${params.value.toLocaleString()} km`,
     },
     {
       field: 'nextMaintenance',
       headerName: 'Next Maintenance',
-      width: 140,
+      width: 180,
       valueFormatter: (params) => new Date(params.value).toLocaleDateString(),
     },
     {
       field: 'actions',
       headerName: 'Actions',
-      width: 120,
+      width: 180,
       sortable: false,
       filterable: false,
       renderCell: (params: any) => (
@@ -224,12 +224,26 @@ const Vehicles: React.FC = () => {
             disableSelectionOnClick
             autoHeight
             sx={{
+              '& .MuiDataGrid-root': {
+                border: 'none',
+              },
               '& .MuiDataGrid-cell': {
                 borderBottom: '1px solid #333',
+                padding: '16px',
+                fontSize: '14px',
               },
               '& .MuiDataGrid-columnHeaders': {
                 backgroundColor: '#2a2a2a',
                 borderBottom: '2px solid #333',
+                padding: '16px',
+                fontSize: '16px',
+                fontWeight: 'bold',
+              },
+              '& .MuiDataGrid-row:hover': {
+                backgroundColor: '#3a3a3a',
+              },
+              '& .MuiDataGrid-virtualScroller': {
+                backgroundColor: '#1a1a1a',
               },
             }}
           />

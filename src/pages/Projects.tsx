@@ -93,14 +93,14 @@ const Projects: React.FC = () => {
   };
 
   const columns: GridColDef[] = [
-    { field: 'name', headerName: 'Project Name', width: 200, flex: 1 },
-    { field: 'client', headerName: 'Client', width: 150 },
-    { field: 'location', headerName: 'Location', width: 150 },
-    { field: 'manager', headerName: 'Manager', width: 150 },
+    { field: 'name', headerName: 'Project Name', width: 300, flex: 1 },
+    { field: 'client', headerName: 'Client', width: 200 },
+    { field: 'location', headerName: 'Location', width: 200 },
+    { field: 'manager', headerName: 'Manager', width: 180 },
     {
       field: 'status',
       headerName: 'Status',
-      width: 120,
+      width: 150,
       renderCell: (params) => (
         <Chip
           label={params.value}
@@ -116,7 +116,7 @@ const Projects: React.FC = () => {
     {
       field: 'progress',
       headerName: 'Progress',
-      width: 120,
+      width: 200,
       renderCell: (params) => (
         <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
           <Box sx={{ flexGrow: 1, mr: 1 }}>
@@ -145,19 +145,19 @@ const Projects: React.FC = () => {
     {
       field: 'budget',
       headerName: 'Budget',
-      width: 120,
+      width: 150,
       valueFormatter: (params) => `$${params.value.toLocaleString()}`,
     },
     {
       field: 'startDate',
       headerName: 'Start Date',
-      width: 120,
+      width: 150,
       valueFormatter: (params) => new Date(params.value).toLocaleDateString(),
     },
     {
       field: 'actions',
       headerName: 'Actions',
-      width: 120,
+      width: 180,
       sortable: false,
       filterable: false,
       renderCell: (params: any) => (
@@ -211,12 +211,26 @@ const Projects: React.FC = () => {
             disableSelectionOnClick
             autoHeight
             sx={{
+              '& .MuiDataGrid-root': {
+                border: 'none',
+              },
               '& .MuiDataGrid-cell': {
                 borderBottom: '1px solid #333',
+                padding: '16px',
+                fontSize: '14px',
               },
               '& .MuiDataGrid-columnHeaders': {
                 backgroundColor: '#2a2a2a',
                 borderBottom: '2px solid #333',
+                padding: '16px',
+                fontSize: '16px',
+                fontWeight: 'bold',
+              },
+              '& .MuiDataGrid-row:hover': {
+                backgroundColor: '#3a3a3a',
+              },
+              '& .MuiDataGrid-virtualScroller': {
+                backgroundColor: '#1a1a1a',
               },
             }}
           />
