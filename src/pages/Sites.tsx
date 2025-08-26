@@ -87,68 +87,22 @@ const Sites: React.FC = () => {
   };
 
   const columns: GridColDef[] = [
-    { field: 'name', headerName: 'Site Name', width: 200, flex: 1 },
-    { field: 'address', headerName: 'Address', width: 250 },
-    {
-      field: 'projectId',
-      headerName: 'Project',
-      width: 200,
-      valueGetter: (params) => {
-        const project = projects.find(p => p.id === params.value);
-        return project?.name || 'Not Assigned';
-      },
-    },
-    {
-      field: 'area',
-      headerName: 'Area (sq ft)',
-      width: 120,
-      valueFormatter: (params) => params.value.toLocaleString(),
-    },
-    {
-      field: 'coordinates',
-      headerName: 'Coordinates',
-      width: 150,
-      valueGetter: (params) => `${params.value.latitude}, ${params.value.longitude}`,
-    },
-    {
-      field: 'status',
-      headerName: 'Status',
-      width: 120,
-      renderCell: (params) => (
-        <Chip
-          label={params.value}
-          size="small"
-          color={params.value === 'active' ? 'success' : 'error'}
-        />
-      ),
-    },
+    { field: 'name', headerName: 'Site Name', width: 300, flex: 1 },
+    { field: 'location', headerName: 'Location', width: 250 },
+    { field: 'address', headerName: 'Address', width: 300 },
+    { field: 'manager', headerName: 'Site Manager', width: 200 },
+    { field: 'contact', headerName: 'Contact', width: 180 },
+    { field: 'status', headerName: 'Status', width: 150 },
     {
       field: 'actions',
       headerName: 'Actions',
-      width: 120,
-      sortable: false,
-      filterable: false,
-      renderCell: (params: any) => (
-        <Box sx={{ display: 'flex', gap: 1 }}>
-          <IconButton
-            size="small"
-            onClick={() => handleOpenDialog(params.row)}
-            color="primary"
-          >
-            <ViewIcon />
-          </IconButton>
-          <IconButton
-            size="small"
-            onClick={() => handleOpenDialog(params.row)}
-            color="primary"
-          >
+      width: 150,
+      renderCell: (params) => (
+        <Box>
+          <IconButton onClick={() => handleOpenDialog(params.row)} size="small">
             <EditIcon />
           </IconButton>
-          <IconButton
-            size="small"
-            onClick={() => handleDelete(params.id as string)}
-            color="error"
-          >
+          <IconButton onClick={() => handleDelete(params.row.id)} size="small">
             <DeleteIcon />
           </IconButton>
         </Box>
@@ -176,15 +130,30 @@ const Sites: React.FC = () => {
             columns={columns}
             pageSize={10}
             rowsPerPageOptions={[10, 25, 50]}
+            checkboxSelection
             disableSelectionOnClick
             autoHeight
             sx={{
+              '& .MuiDataGrid-root': {
+                border: 'none',
+              },
               '& .MuiDataGrid-cell': {
                 borderBottom: '1px solid #333',
+                padding: '16px',
+                fontSize: '14px',
               },
               '& .MuiDataGrid-columnHeaders': {
                 backgroundColor: '#2a2a2a',
                 borderBottom: '2px solid #333',
+                padding: '16px',
+                fontSize: '16px',
+                fontWeight: 'bold',
+              },
+              '& .MuiDataGrid-row:hover': {
+                backgroundColor: '#3a3a3a',
+              },
+              '& .MuiDataGrid-virtualScroller': {
+                backgroundColor: '#1a1a1a',
               },
             }}
           />

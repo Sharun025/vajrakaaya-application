@@ -97,121 +97,34 @@ const Expenses: React.FC = () => {
   };
 
   const columns: GridColDef[] = [
-    { field: 'title', headerName: 'Expense Title', width: 200, flex: 1 },
-    {
-      field: 'amount',
-      headerName: 'Amount',
-      width: 120,
-      valueFormatter: (params) => `$${params.value.toLocaleString()}`,
-    },
-    {
-      field: 'category',
-      headerName: 'Category',
-      width: 120,
-      renderCell: (params) => (
-        <Chip
-          label={params.value}
-          size="small"
-          color={
-            params.value === 'labor' ? 'primary' :
-            params.value === 'materials' ? 'secondary' :
-            params.value === 'equipment' ? 'info' :
-            params.value === 'fuel' ? 'warning' :
-            params.value === 'utilities' ? 'success' : 'default'
-          }
-        />
-      ),
-    },
-    {
-      field: 'projectId',
-      headerName: 'Project',
-      width: 150,
-      valueGetter: (params) => {
-        const project = projects.find(p => p.id === params.value);
-        return project?.name || 'Not Assigned';
-      },
-    },
-    {
-      field: 'status',
-      headerName: 'Status',
-      width: 120,
-      renderCell: (params) => (
-        <Chip
-          label={params.value}
-          size="small"
-          color={
-            params.value === 'approved' ? 'success' :
-            params.value === 'pending' ? 'warning' :
-            params.value === 'rejected' ? 'error' : 'default'
-          }
-        />
-      ),
-    },
-    { field: 'vendor', headerName: 'Vendor', width: 150 },
-    {
-      field: 'paymentMethod',
-      headerName: 'Payment Method',
-      width: 130,
-    },
-    {
-      field: 'date',
-      headerName: 'Date',
-      width: 120,
-      valueFormatter: (params) => new Date(params.value).toLocaleDateString(),
-    },
-    {
-      field: 'approvedBy',
-      headerName: 'Approved By',
-      width: 130,
-      valueFormatter: (params) => params.value || 'Pending',
-    },
+    { field: 'description', headerName: 'Description', width: 300, flex: 1 },
+    { field: 'amount', headerName: 'Amount', width: 150, type: 'number' },
+    { field: 'category', headerName: 'Category', width: 200 },
+    { field: 'date', headerName: 'Date', width: 180, type: 'date' },
+    { field: 'status', headerName: 'Status', width: 150 },
+    { field: 'approvedBy', headerName: 'Approved By', width: 200 },
     {
       field: 'actions',
       headerName: 'Actions',
       width: 200,
-      sortable: false,
-      filterable: false,
-      renderCell: (params: any) => (
-        <Box sx={{ display: 'flex', gap: 1 }}>
-          <IconButton
-            size="small"
-            onClick={() => handleOpenDialog(params.row)}
-            color="primary"
-          >
-            <ViewIcon />
-          </IconButton>
-          <IconButton
-            size="small"
-            onClick={() => handleOpenDialog(params.row)}
-            color="primary"
-          >
+      renderCell: (params) => (
+        <Box>
+          <IconButton onClick={() => handleOpenDialog(params.row)} size="small">
             <EditIcon />
+          </IconButton>
+          <IconButton onClick={() => handleDelete(params.row.id)} size="small">
+            <DeleteIcon />
           </IconButton>
           {params.row.status === 'pending' && (
             <>
-              <IconButton
-                size="small"
-                onClick={() => handleStatusChange(params.id as string, 'approved')}
-                color="success"
-              >
+              <IconButton onClick={() => handleStatusChange(params.row.id as string, 'approved')} size="small">
                 <ApproveIcon />
               </IconButton>
-              <IconButton
-                size="small"
-                onClick={() => handleStatusChange(params.id as string, 'rejected')}
-                color="warning"
-              >
+              <IconButton onClick={() => handleStatusChange(params.row.id as string, 'rejected')} size="small">
                 <RejectIcon />
               </IconButton>
             </>
           )}
-          <IconButton
-            size="small"
-            onClick={() => handleDelete(params.id as string)}
-            color="error"
-          >
-            <DeleteIcon />
-          </IconButton>
         </Box>
       ),
     },
@@ -301,15 +214,30 @@ const Expenses: React.FC = () => {
             columns={columns}
             pageSize={10}
             rowsPerPageOptions={[10, 25, 50]}
+            checkboxSelection
             disableSelectionOnClick
             autoHeight
             sx={{
+              '& .MuiDataGrid-root': {
+                border: 'none',
+              },
               '& .MuiDataGrid-cell': {
                 borderBottom: '1px solid #333',
+                padding: '16px',
+                fontSize: '14px',
               },
               '& .MuiDataGrid-columnHeaders': {
                 backgroundColor: '#2a2a2a',
                 borderBottom: '2px solid #333',
+                padding: '16px',
+                fontSize: '16px',
+                fontWeight: 'bold',
+              },
+              '& .MuiDataGrid-row:hover': {
+                backgroundColor: '#3a3a3a',
+              },
+              '& .MuiDataGrid-virtualScroller': {
+                backgroundColor: '#1a1a1a',
               },
             }}
           />

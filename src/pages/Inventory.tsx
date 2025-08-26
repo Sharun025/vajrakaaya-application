@@ -95,84 +95,22 @@ const Inventory: React.FC = () => {
   };
 
   const columns: GridColDef[] = [
-    {
-      field: 'materialId',
-      headerName: 'Material',
-      width: 200,
-      valueGetter: (params) => {
-        const material = materials.find(m => m.id === params.value);
-        return material?.name || 'Unknown Material';
-      },
-    },
-    {
-      field: 'type',
-      headerName: 'Type',
-      width: 100,
-      renderCell: (params) => (
-        <Chip
-          label={params.value === 'in' ? 'IN' : params.value === 'out' ? 'OUT' : 'ADJUST'}
-          size="small"
-          color={
-            params.value === 'in' ? 'success' :
-            params.value === 'out' ? 'error' : 'warning'
-          }
-        />
-      ),
-    },
-    {
-      field: 'quantity',
-      headerName: 'Quantity',
-      width: 100,
-      valueGetter: (params) => {
-        const material = materials.find(m => m.id === params.row.materialId);
-        return `${params.value} ${material?.unit || ''}`;
-      },
-    },
-    {
-      field: 'projectId',
-      headerName: 'Project',
-      width: 150,
-      valueGetter: (params) => {
-        const project = projects.find(p => p.id === params.value);
-        return project?.name || 'Not Assigned';
-      },
-    },
-    { field: 'reason', headerName: 'Reason', width: 150 },
-    { field: 'performedBy', headerName: 'Performed By', width: 120 },
-    {
-      field: 'date',
-      headerName: 'Date',
-      width: 120,
-      valueFormatter: (params) => new Date(params.value).toLocaleDateString(),
-    },
-    { field: 'notes', headerName: 'Notes', width: 200 },
+    { field: 'materialName', headerName: 'Material Name', width: 300, flex: 1 },
+    { field: 'category', headerName: 'Category', width: 200 },
+    { field: 'quantity', headerName: 'Quantity', width: 150, type: 'number' },
+    { field: 'unit', headerName: 'Unit', width: 120 },
+    { field: 'location', headerName: 'Location', width: 200 },
+    { field: 'lastUpdated', headerName: 'Last Updated', width: 180 },
     {
       field: 'actions',
       headerName: 'Actions',
-      width: 120,
-      sortable: false,
-      filterable: false,
-      renderCell: (params: any) => (
-        <Box sx={{ display: 'flex', gap: 1 }}>
-          <IconButton
-            size="small"
-            onClick={() => handleOpenDialog(params.row)}
-            color="primary"
-          >
-            <ViewIcon />
-          </IconButton>
-          <IconButton
-            size="small"
-            onClick={() => handleOpenDialog(params.row)}
-            color="primary"
-          >
+      width: 150,
+      renderCell: (params) => (
+        <Box>
+          <IconButton onClick={() => handleOpenDialog(params.row)} size="small">
             <EditIcon />
           </IconButton>
-          <IconButton
-            size="small"
-            onClick={() => handleDelete(params.id as string)}
-            color="error"
-          >
+          <IconButton onClick={() => handleDelete(params.row.id)} size="small">
             <DeleteIcon />
           </IconButton>
         </Box>
@@ -200,15 +138,30 @@ const Inventory: React.FC = () => {
             columns={columns}
             pageSize={10}
             rowsPerPageOptions={[10, 25, 50]}
+            checkboxSelection
             disableSelectionOnClick
             autoHeight
             sx={{
+              '& .MuiDataGrid-root': {
+                border: 'none',
+              },
               '& .MuiDataGrid-cell': {
                 borderBottom: '1px solid #333',
+                padding: '16px',
+                fontSize: '14px',
               },
               '& .MuiDataGrid-columnHeaders': {
                 backgroundColor: '#2a2a2a',
                 borderBottom: '2px solid #333',
+                padding: '16px',
+                fontSize: '16px',
+                fontWeight: 'bold',
+              },
+              '& .MuiDataGrid-row:hover': {
+                backgroundColor: '#3a3a3a',
+              },
+              '& .MuiDataGrid-virtualScroller': {
+                backgroundColor: '#1a1a1a',
               },
             }}
           />

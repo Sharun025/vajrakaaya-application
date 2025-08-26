@@ -82,86 +82,22 @@ const CostCenters: React.FC = () => {
   };
 
   const columns: GridColDef[] = [
-    { field: 'name', headerName: 'Cost Center Name', width: 200, flex: 1 },
-    { field: 'description', headerName: 'Description', width: 250 },
-    {
-      field: 'projectId',
-      headerName: 'Project',
-      width: 200,
-      valueGetter: (params) => {
-        const project = projects.find(p => p.id === params.value);
-        return project?.name || 'Not Assigned';
-      },
-    },
-    { field: 'manager', headerName: 'Manager', width: 150 },
-    {
-      field: 'budget',
-      headerName: 'Budget',
-      width: 120,
-      valueFormatter: (params) => `$${params.value.toLocaleString()}`,
-    },
-    {
-      field: 'spent',
-      headerName: 'Spent',
-      width: 120,
-      valueFormatter: (params) => `$${params.value.toLocaleString()}`,
-    },
-    {
-      field: 'remaining',
-      headerName: 'Remaining',
-      width: 120,
-      valueGetter: (params) => params.row.budget - params.row.spent,
-      valueFormatter: (params) => `$${params.value.toLocaleString()}`,
-    },
-    {
-      field: 'utilization',
-      headerName: 'Utilization',
-      width: 150,
-      renderCell: (params) => {
-        const percentage = (params.row.spent / params.row.budget) * 100;
-        const color = percentage > 90 ? 'error' : percentage > 75 ? 'warning' : 'success';
-        return (
-          <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-            <Box sx={{ flexGrow: 1, mr: 1 }}>
-              <LinearProgress
-                variant="determinate"
-                value={Math.min(percentage, 100)}
-                color={color}
-                sx={{ height: 8, borderRadius: 4 }}
-              />
-            </Box>
-            <Typography variant="body2">{percentage.toFixed(1)}%</Typography>
-          </Box>
-        );
-      },
-    },
+    { field: 'name', headerName: 'Cost Center Name', width: 300, flex: 1 },
+    { field: 'code', headerName: 'Code', width: 150 },
+    { field: 'department', headerName: 'Department', width: 200 },
+    { field: 'manager', headerName: 'Manager', width: 200 },
+    { field: 'budget', headerName: 'Budget', width: 150, type: 'number' },
+    { field: 'status', headerName: 'Status', width: 150 },
     {
       field: 'actions',
       headerName: 'Actions',
-      width: 120,
-      sortable: false,
-      filterable: false,
-      renderCell: (params: any) => (
-        <Box sx={{ display: 'flex', gap: 1 }}>
-          <IconButton
-            size="small"
-            onClick={() => handleOpenDialog(params.row)}
-            color="primary"
-          >
-            <ViewIcon />
-          </IconButton>
-          <IconButton
-            size="small"
-            onClick={() => handleOpenDialog(params.row)}
-            color="primary"
-          >
+      width: 150,
+      renderCell: (params) => (
+        <Box>
+          <IconButton onClick={() => handleOpenDialog(params.row)} size="small">
             <EditIcon />
           </IconButton>
-          <IconButton
-            size="small"
-            onClick={() => handleDelete(params.id as string)}
-            color="error"
-          >
+          <IconButton onClick={() => handleDelete(params.row.id)} size="small">
             <DeleteIcon />
           </IconButton>
         </Box>
@@ -245,15 +181,30 @@ const CostCenters: React.FC = () => {
             columns={columns}
             pageSize={10}
             rowsPerPageOptions={[10, 25, 50]}
+            checkboxSelection
             disableSelectionOnClick
             autoHeight
             sx={{
+              '& .MuiDataGrid-root': {
+                border: 'none',
+              },
               '& .MuiDataGrid-cell': {
                 borderBottom: '1px solid #333',
+                padding: '16px',
+                fontSize: '14px',
               },
               '& .MuiDataGrid-columnHeaders': {
                 backgroundColor: '#2a2a2a',
                 borderBottom: '2px solid #333',
+                padding: '16px',
+                fontSize: '16px',
+                fontWeight: 'bold',
+              },
+              '& .MuiDataGrid-row:hover': {
+                backgroundColor: '#3a3a3a',
+              },
+              '& .MuiDataGrid-virtualScroller': {
+                backgroundColor: '#1a1a1a',
               },
             }}
           />
