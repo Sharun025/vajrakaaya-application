@@ -38,8 +38,19 @@
 # Disable directory browsing
 Options -Indexes
 
-# Handle React Router - redirect all requests to index.php
+# Handle React Router - redirect all requests to index.html
 RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^ index.php [QSA,L]
+RewriteRule ^ index.html [QSA,L]
+
+# Set correct MIME types for JavaScript files
+<IfModule mod_mime.c>
+    AddType application/javascript .js
+    AddType text/css .css
+    AddType application/json .json
+    AddType image/svg+xml .svg
+    AddType font/woff .woff
+    AddType font/woff2 .woff2
+    AddType font/ttf .ttf
+</IfModule>
